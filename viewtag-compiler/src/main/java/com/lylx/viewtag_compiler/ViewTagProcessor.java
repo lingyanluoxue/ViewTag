@@ -3,6 +3,7 @@ package com.lylx.viewtag_compiler;
 
 import com.google.auto.service.AutoService;
 import com.lylx.viewtag_annotation.BindView;
+import com.lylx.viewtag_annotation.OnClick;
 import com.squareup.javapoet.JavaFile;
 
 import java.io.IOException;
@@ -19,9 +20,11 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic;
 
 /**
  * Created by zhanghongmei on 2016/10/11.
@@ -59,6 +62,8 @@ public class ViewTagProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         mProxyMap.clear();
         processBindView(roundEnv);
+
+        processOnClick(roundEnv);
 
         //生成代理类
 /*        for (String key : mProxyMap.keySet()) {
@@ -107,6 +112,27 @@ public class ViewTagProcessor extends AbstractProcessor {
             BindView annotation = variableElement.getAnnotation(BindView.class);
             int id = annotation.value();
             proxyInfo.mInjectElements.put(id, variableElement);
+        }
+    }
+    private void processOnClick(RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(OnClick.class);
+        //一、收集信息
+        for (Element element : elements) {
+            //method type
+            ExecutableElement executableElement = (ExecutableElement) element;
+            //class type
+            TypeElement typeElement = (TypeElement) executableElement.getEnclosingElement();//TypeElement
+            String qualifiedName = typeElement.getQualifiedName().toString();
+            ProxyInfo proxyInfo = mProxyMap.get(qualifiedName);
+            if (proxyInfo == null) {
+                proxyInfo = new ProxyInfo(mElementUtils, typeElement);
+                mProxyMap.put(qualifiedName, proxyInfo);
+            }
+            OnClick annotation = executableElement.getAnnotation(OnClick.class);
+            int[] ids = annotation.value();
+            for(int i=0; i<ids.length; i++){
+                proxyInfo.mOnclickInjectElements.put(ids[i], executableElement);
+            }
         }
     }
 

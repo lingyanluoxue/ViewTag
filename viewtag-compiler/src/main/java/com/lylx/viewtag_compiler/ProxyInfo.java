@@ -93,6 +93,31 @@ public class ProxyInfo {
                     .addStatement("host.$N=($T)(((android.view.View)object).findViewById($L))", name, type, id)
                     .endControlFlow();
         }
+        if (mOnclickInjectElements.size()>0){
+            result.addStatement("$T listener", ClassName.get("android.view", "View", "OnClickListener"));
+            for (int id : mOnclickInjectElements.keySet()){
+                ExecutableElement executableElement = mOnclickInjectElements.get(id);
+                Name name = executableElement.getSimpleName();
+                // 生成OnClickListener的类
+                TypeSpec listener = TypeSpec.anonymousClassBuilder("")
+                        .addSuperinterface(ClassName.get("android.view", "View", "OnClickListener"))
+                        .addMethod(MethodSpec.methodBuilder("onClick")
+                                .addAnnotation(Override.class)
+                                .addModifiers(Modifier.PUBLIC)
+                                .returns(TypeName.VOID)
+                                .addParameter(ClassName.get("android.view", "View"), "view")
+                                .addStatement("host.$N(view)", name)
+                                .build())
+                        .build();
+                result.addStatement("listener = $L ", listener);
+                result.beginControlFlow(" if(object instanceof android.app.Activity)")
+                        .addStatement("(((android.app.Activity)object).findViewById($L)).setOnClickListener(listener)", id)
+                        .nextControlFlow("else")
+                        .addStatement("(((android.view.View)object).findViewById($L)).setOnClickListener(listener)", id)
+                        .endControlFlow();
+
+            }
+        }
         return result.build();
     }
 
