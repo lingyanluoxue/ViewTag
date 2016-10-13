@@ -94,10 +94,6 @@ public class ViewTagProcessor extends AbstractProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(BindView.class);
         //一、收集信息
         for (Element element : elements) {
-            //检查element类型
-//            if (!checkAnnotationUseValid(element)){
-//                return false;
-//            }
             //field type
             VariableElement variableElement = (VariableElement) element;
             //class type
