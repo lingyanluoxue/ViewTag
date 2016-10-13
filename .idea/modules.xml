@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ViewTag.iml" filepath="$PROJECT_DIR$/ViewTag.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewtag-annotation/viewtag-annotation.iml" filepath="$PROJECT_DIR$/viewtag-annotation/viewtag-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewtag-api/viewtag-api.iml" filepath="$PROJECT_DIR$/viewtag-api/viewtag-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewtag-compiler/viewtag-compiler.iml" filepath="$PROJECT_DIR$/viewtag-compiler/viewtag-compiler.iml" />
+    </modules>
+  </component>
+</project>

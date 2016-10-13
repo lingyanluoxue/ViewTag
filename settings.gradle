@@ -1,0 +1,1 @@
+include ':app', ':viewtag-annotation', ':viewtag-compiler', ':viewtag-api'
